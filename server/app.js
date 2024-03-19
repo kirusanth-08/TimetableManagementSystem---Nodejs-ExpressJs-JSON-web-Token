@@ -13,6 +13,7 @@ const courseRoutes = require('./routes/courseRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
 
 const User = require('./models/user');
+const Course = require('./models/course');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -53,7 +54,7 @@ app.post('/login', async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.password);
   
       if (isMatch) {
-        const token = jwt.sign({ userId: user._id, username: user.username }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.SECRET_KEY, { expiresIn: '1h' });
         res.json({ token });
       } else {
         return res.status(401).json({ message: 'Invalid username or password' });
@@ -62,23 +63,20 @@ app.post('/login', async (req, res) => {
       console.error('Error authenticating user:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  });
+});
 
-// Define the getCourses function
-const getCourses = async (req, res) => {
-    try {
-      // Your logic for retrieving courses
-      const courses = await Course.find({});
-      res.json({ courses });
-    } catch (error) {
-      console.error('Error retrieving courses:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-  
-  // Register the '/courses' route with the getCourses function and authMiddleware.verifyToken middleware
-  app.get('/courses', authMiddleware.verifyToken, getCourses);
-  
+
+
+  //Fetching course
+  // app.get('/courses', authorizeMiddleware.verifyToken, async (req, res) => {
+  //   try {
+  //     const courses = await Course.find();
+  //     res.json({ courses });
+  //   } catch (error) {
+  //     console.error('Error fetching courses:', error);
+  //     res.status(500).json({ message: 'Internal server error' });
+  //   }
+  // });
 
 // Use the verifyToken middleware from authMiddleware
 // app.get('/protected', authMiddleware, (req, res) => {
