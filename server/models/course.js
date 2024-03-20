@@ -16,6 +16,11 @@ const courseSchema = new mongoose.Schema({
   credits: {
     type: Number,
     required: true
+  },
+  faculty: {
+    type: String,
+    enum: ['IT', 'Eng'],
+    required: true
   }
 });
 

@@ -20,6 +20,14 @@ const login = async (req, res) => {
       if (isMatch) {
         const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, process.env.SECRET_KEY, { expiresIn: '20m' });
 
+        // Set JWT token as a cookie in the response
+        res.cookie('accessToken', token, {
+          maxAge: 20 * 60 * 1000, // Expiration time in milliseconds (20 minutes)
+          httpOnly: true, // Cookie is accessible only through HTTP requests
+          secure: true, // Cookie is sent only over HTTPS (if your application uses HTTPS)
+          sameSite: 'strict', // Restricts cookie to be sent only with same-site requests
+        });
+
         res.json({ token });
       } else {
         return res.status(401).json({ message: 'Invalid  password' });

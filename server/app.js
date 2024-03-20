@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 
 // Import routes
@@ -25,8 +26,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 const app = express();
-
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 // Use imported routes
 app.use(loginRoute);

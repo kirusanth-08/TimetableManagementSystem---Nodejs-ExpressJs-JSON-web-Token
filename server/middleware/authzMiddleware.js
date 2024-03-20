@@ -4,8 +4,11 @@ require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 // Middleware for role-based authorization
 const authorize = (allowedRoles) => (req, res, next) => {
-    // Extract token from request headers
-    const token = req.headers.authorization;
+  //getting token from header
+    // const token = req.headers.authorization;
+
+    //getting token from cookie
+    const token = req.cookies.accessToken;
 
     // Verify token
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
