@@ -3,3 +3,6 @@ Kindly check follwing repository check the timestamps of me commits:
     https://github.com/kirusanth-08/labsheet2-AF.git
 
 Seperate Folders, files created for Models, Controllers, Routes, Middleware, configuration file(.env)
+
+
+npm start: Start development server

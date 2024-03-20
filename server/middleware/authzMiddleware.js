@@ -7,16 +7,8 @@ const authorize = (allowedRoles) => (req, res, next) => {
     // Extract token from request headers
     const token = req.headers.authorization;
 
-    // Check if token is present
-    if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-    }
-
     // Verify token
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if (err) {
-            return res.status(403).json({ message: 'Failed to authenticate token' });
-        }
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         
         // Check if user has the required role
         const { role } = decoded;
@@ -28,4 +20,4 @@ const authorize = (allowedRoles) => (req, res, next) => {
     });
 };
 
-module.exports = { authorize };
+module.exports = authorize;

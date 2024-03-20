@@ -1,62 +1,57 @@
 const Course = require('../models/course');
 
-// Create a new course
 const createCourse = async (req, res) => {
   try {
     const course = new Course(req.body);
     await course.save();
     res.status(201).send({ course });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ error: error.message });
   }
 };
 
-// Get all courses
 const getCourses = async (req, res) => {
   try {
     const courses = await Course.find({});
     res.send(courses);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error: 'Internal Server Error' });
   }
 };
 
-// Get course by id
 const getCourse = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);
     if (!course) {
-      return res.status(404).send();
+      return res.status(404).send({ error: 'Course not found' });
     }
     res.send(course);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error: 'Internal Server Error' });
   }
 };
 
-// Update a course
 const updateCourse = async (req, res) => {
   try {
     const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!course) {
-      return res.status(404).send();
+      return res.status(404).send({ error: 'Course not found' });
     }
     res.send(course);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ error: error.message });
   }
 };
 
-// Delete a course
 const deleteCourse = async (req, res) => {
   try {
     const course = await Course.findByIdAndDelete(req.params.id);
     if (!course) {
-      return res.status(404).send();
+      return res.status(404).send({ error: 'Course not found' });
     }
     res.send(course);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error: 'Internal Server Error' });
   }
 };
 

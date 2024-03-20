@@ -1,24 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const courseController = require('../controllers/courseController');
-const { verifyToken } = require('../middleware/authMiddleware');
-const { getUserFromToken } = require('../middleware/authMiddleware');
-const { authorize } = require('../middleware/authorizationMiddleware');
-
+const authenticate = require('../middleware/authMiddleware');
+const authorize = require('../middleware/authzMiddleware');
 
 // Create a new course
-router.post('/api/courses', verifyToken, authorize(['admin']), courseController.createCourse);
+router.post('/api/courses', authenticate, authorize(['admin']), courseController.createCourse);
 
 // Get all courses
-router.get('/api/courses', courseController.getCourses);
+router.get('/api/courses', authenticate, courseController.getCourses);
 
 // Get course by id
 router.get('/api/courses/:id', courseController.getCourse);
 
 // Update a course
-router.put('/api/courses/:id', verifyToken, authorize(['admin']), courseController.updateCourse);
+router.put('/api/courses/:id', authenticate, authorize(['admin']), courseController.updateCourse);
 
 // Delete a course
-router.delete('/api/courses/:id', verifyToken, authorize(['admin']), courseController.deleteCourse);
+router.delete('/api/courses/:id', authenticate, authorize(['admin']), courseController.deleteCourse);
 
 module.exports = router;
