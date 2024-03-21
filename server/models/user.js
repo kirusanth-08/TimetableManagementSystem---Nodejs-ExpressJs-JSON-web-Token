@@ -11,10 +11,25 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  year: {
+    type: Number,
+    enum: [1, 2, 3, 4],
+    required: () => { return this.role === "student"; },
+  },
+  semester: {
+    type: Number,
+    enum: [1, 2],
+    required: () => { return this.role === "student"; },
+  },
   role: {
     type: String,
     enum: ["admin", "faculty", "student", "staff"],
-    default: "user",
+    default: "student",
+  },
+  faculty: {
+    type: String,
+    enum: ["IT", "Eng", "Science", "Business"],
+    required: () => { return (this.role === "faculty") || (this.role === "staff") || (this.role === "student"); },
   },
 });
 

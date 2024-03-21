@@ -21,6 +21,16 @@ const getUsers = async (req, res) => {
   }
 };
 
+// Get all users facultywise
+const getUsersFacultywise = async (req, res) => {
+  try {
+    const users = await User.find({ faculty: req.params.faculty });
+    res.send(users);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
+
 // Get user by id
 const getUser = async (req, res) => {
   try {
@@ -63,6 +73,7 @@ const deleteUser = async (req, res) => {
 module.exports = {
   createUser,
   getUsers,
+  getUsersFacultywise,
   getUser,
   updateUser,
   deleteUser

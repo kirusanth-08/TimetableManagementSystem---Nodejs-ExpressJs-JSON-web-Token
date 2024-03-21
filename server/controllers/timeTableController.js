@@ -1,89 +1,39 @@
-// const Timetable = require("../models/timetable");
-// const bookingController = require("./bookingController");
-// // const roomController = require("./roomController");
+const Timetable = require("../models/Timetable");
+const Course = require("../models/course");
+const bookingController = require("./bookingController");
 
-// // Create a new timetable entry
-// const createEntry = async (req, res) => {
-//   try {
-//     // Find the room and add the booking
-//     // const room = await roomController.getRoom(req.body.room);
+// Get timetable entry by id
+const getTimetable = async (req, res) => {
+  try {
+    const { faculty, year, semester } = req.params;
+    const courses = await Course.find({ faculty, year, semester });
 
-//     // if (!room) {
-//     //   return res.status(404).json({ message: "Room not found" });
-//     // }
+    // If no courses are found, send a 404 response
+    if (!courses.length) {
+      return res.status(404).send("No courses found");
+    }
 
-//     // Create a new booking
-//     const booking = await bookingController.createBooking(req.body.location, req.body.date, req.body.startTime, req.body.endTime, req.body.type);
+    // Extract the courseIds from the courses
+    const courseIds = courses.map((course) => course._id);
 
-//     // Create a new timetable entry with the bookingId of the created booking
-//     const timetableEntry = new Timetable({ bookingId: booking._id, ...req.body.course });
-//     await timetableEntry.save();
+    // Find all timetable entries where the courseId matches one of the courseIds
+    const timetable = await Timetable.find({ course: { $in: courseIds } })
+      .populate('course', 'name') // Replace 'course' with the actual Course document and only include the 'name' field
+      .populate({
+        path: 'booking', // Replace 'booking' with the actual Booking document
+        select: 'startTime endTime' // Only include the 'startTime' and 'endTime' fields
+      });
 
-//     // Send the booking in the response
-//     res.json(booking);
-//   } catch (err) {
-//     console.log(err)
-//     res.status(500).json({message: "Error creating timetable entry and adding booking" , err});
-//   }
-// };
 
-// // Get all timetable entries
-// const getEntries = async (req, res) => {
-//   try {
-//     const timetable = await Timetable.find({});
-//     res.send(timetable);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
+    if (!timetable) {
+      return res.status(404).send("No timetable available");
+    }
+    res.send(timetable);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 
-// // Get timetable entry by id
-// const getEntry = async (req, res) => {
-//   try {
-//     const timetable = await Timetable.findById(req.params.id);
-//     if (!timetable) {
-//       return res.status(404).send();
-//     }
-//     res.send(timetable);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
-
-// // Update a timetable entry
-// const updateEntry = async (req, res) => {
-//   try {
-//     const timetable = await Timetable.findByIdAndUpdate(
-//       req.params.id,
-//       req.body,
-//       { new: true, runValidators: true }
-//     );
-//     if (!timetable) {
-//       return res.status(404).send();
-//     }
-//     res.send(timetable);
-//   } catch (error) {
-//     res.status(400).send(error);
-//   }
-// };
-
-// // Delete a timetable entry
-// const deleteEntry = async (req, res) => {
-//   try {
-//     const timetable = await Timetable.findByIdAndDelete(req.params.id);
-//     if (!timetable) {
-//       return res.status(404).send();
-//     }
-//     res.send(timetable);
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// };
-
-// module.exports = {
-//   createEntry,
-//   getEntries,
-//   getEntry,
-//   updateEntry,
-//   deleteEntry,
-// };
+module.exports = {
+  getTimetable,
+};

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const login = require('../controllers/loginController');
+const { login, logout } = require('../controllers/loginController');
 
 router.post('/login', async (req, res) => {
     try {
@@ -9,6 +9,10 @@ router.post('/login', async (req, res) => {
         console.error('Error logging in:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
+});
+
+router.post('/logout', (req, res) => {
+    logout(req, res);
 });
 
 module.exports = router;

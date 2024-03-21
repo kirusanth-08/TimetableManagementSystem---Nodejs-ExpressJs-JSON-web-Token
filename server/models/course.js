@@ -1,12 +1,21 @@
 const mongoose = require('mongoose');
 
 const courseSchema = new mongoose.Schema({
-  name: {
+  code: {
+    type: String,
+    required: true
+  },name: {
     type: String,
     required: true
   },
-  code: {
-    type: String,
+  year: {
+    type: Number,
+    enum: [1, 2, 3, 4],
+    required: true
+  },
+  semester: {
+    type: Number,
+    enum: [1, 2],
     required: true
   },
   description: {
