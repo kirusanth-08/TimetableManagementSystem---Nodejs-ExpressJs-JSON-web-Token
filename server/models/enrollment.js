@@ -14,12 +14,6 @@ const EnrollmentSchema = new mongoose.Schema({
   dateEnrolled: {
     type: Date,
     default: Date.now
-  },
-  completionDate: {
-    type: Date
-  },
-  grade: {
-    type: String
   }
 });
 

@@ -1,13 +1,56 @@
-const Timetable = require('../models/timetable');
+const Timetable = require("../models/timetable");
 
 // Create a new timetable entry
 const createEntry = async (req, res) => {
   try {
-    const timetable = new Timetable(req.body);
-    await timetable.save();
-    res.status(201).send({ timetable });
+    // Find the room and add the booking
+    const room = await Room.findOne({
+      name: "Room for " + timetableEntry.name,
+    });
+    if (!room) {
+      return res.status(404).json({ message: "Room not found" });
+    }
+
+    // Check if there is already a booking at the same time
+    const existingBooking = await Room.findOne({
+      "roomId": room._id,
+      "bookings.date": req.body.date,
+    });
+
+    if (existingBooking) {
+      // Loop through existing bookings to check for overlap
+      const overlappingBooking = existingBooking.bookings.find((booking) => {
+        return (
+          (booking.startTime < req.body.endTime &&
+            booking.endTime > req.body.startTime) ||
+          (booking.startTime < req.body.endTime &&
+            booking.endTime > req.body.startTime)
+        );
+      });
+
+      if (overlappingBooking) {
+        return res
+          .status(400)
+          .json({ message: "There is already a booking at this time" });
+      }
+    }
+    // Create a new timetable entry
+    const timetableEntry = new Timetable(req.body);
+    await timetableEntry.save();
+
+    room.bookings.push({
+      date: req.body.date,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+    });
+    await room.save();
+
+    res.status(201).json({ timetableEntry, room });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(500).json({
+      message: "Error creating timetable entry and adding booking",
+      error,
+    });
   }
 };
 
@@ -37,7 +80,11 @@ const getEntry = async (req, res) => {
 // Update a timetable entry
 const updateEntry = async (req, res) => {
   try {
-    const timetable = await Timetable.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const timetable = await Timetable.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
     if (!timetable) {
       return res.status(404).send();
     }
@@ -65,5 +112,5 @@ module.exports = {
   getEntries,
   getEntry,
   updateEntry,
-  deleteEntry
+  deleteEntry,
 };

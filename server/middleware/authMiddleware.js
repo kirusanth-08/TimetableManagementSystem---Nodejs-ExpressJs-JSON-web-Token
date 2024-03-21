@@ -21,12 +21,11 @@ const authenticate = (req, res, next) => {
 // console.log(Math.ceil(expirationTime-Math.floor(Date.now() / 1000)))
 
 
-
   jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
     if (err) {
-      if (err.name === 'TokenExpiredError') {
-        return res.status(401).json({ message: 'Session timeout' });
-      }
+      // if (err.name === 'TokenExpiredError') {
+      //   return res.status(401).json({ message: 'Session timeout' });
+      // }
       return res.status(401).json({ message: 'Failed to authenticate token' });
     }
 

@@ -10,18 +10,18 @@ const RoomSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  availabilitySchedule: [
+  bookings: [
     {
-      day: {
-        type: String,
+      date: {
+        type: Date,
         required: true
       },
-      start: {
-        type: String,
+      startTime: {
+        type: Date, // Storing time as a Date object
         required: true
       },
-      end: {
-        type: String,
+      endTime: {
+        type: Date, // Storing time as a Date object
         required: true
       }
     }

@@ -10,6 +10,8 @@ const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
 const timetableRoutes = require('./routes/timetableRoutes');
 const loginRoute = require('./routes/loginRoute');
+const enrollmentRoute = require('./routes/enrollmentRoutes');
+const roomRoutes = require('./routes/roomRoutes');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -34,6 +36,8 @@ app.use(loginRoute);
 app.use(userRoutes);
 app.use(courseRoutes);
 app.use(timetableRoutes);
+app.use(enrollmentRoute);
+app.use(roomRoutes);
 
 const PORT = process.env.PORT || 3000;
 
