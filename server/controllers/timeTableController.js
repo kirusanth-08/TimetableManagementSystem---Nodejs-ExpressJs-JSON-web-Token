@@ -1,56 +1,29 @@
 const Timetable = require("../models/timetable");
+const bookingController = require("./bookingController");
+// const roomController = require("./roomController");
 
 // Create a new timetable entry
 const createEntry = async (req, res) => {
   try {
     // Find the room and add the booking
-    const room = await Room.findOne({
-      name: "Room for " + timetableEntry.name,
-    });
-    if (!room) {
-      return res.status(404).json({ message: "Room not found" });
-    }
+    // const room = await roomController.getRoom(req.body.room);
 
-    // Check if there is already a booking at the same time
-    const existingBooking = await Room.findOne({
-      "roomId": room._id,
-      "bookings.date": req.body.date,
-    });
+    // if (!room) {
+    //   return res.status(404).json({ message: "Room not found" });
+    // }
 
-    if (existingBooking) {
-      // Loop through existing bookings to check for overlap
-      const overlappingBooking = existingBooking.bookings.find((booking) => {
-        return (
-          (booking.startTime < req.body.endTime &&
-            booking.endTime > req.body.startTime) ||
-          (booking.startTime < req.body.endTime &&
-            booking.endTime > req.body.startTime)
-        );
-      });
+    // Create a new booking
+    const booking = await bookingController.createBooking(req.body.location, req.body.date, req.body.startTime, req.body.endTime, req.body.type);
 
-      if (overlappingBooking) {
-        return res
-          .status(400)
-          .json({ message: "There is already a booking at this time" });
-      }
-    }
-    // Create a new timetable entry
-    const timetableEntry = new Timetable(req.body);
+    // Create a new timetable entry with the bookingId of the created booking
+    const timetableEntry = new Timetable({ bookingId: booking._id, ...req.body.course });
     await timetableEntry.save();
 
-    room.bookings.push({
-      date: req.body.date,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
-    });
-    await room.save();
-
-    res.status(201).json({ timetableEntry, room });
-  } catch (error) {
-    res.status(500).json({
-      message: "Error creating timetable entry and adding booking",
-      error,
-    });
+    // Send the booking in the response
+    res.json(booking);
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({message: "Error creating timetable entry and adding booking" , err});
   }
 };
 

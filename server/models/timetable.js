@@ -1,18 +1,14 @@
 const mongoose = require('mongoose');
 
 const timetableSchema = new mongoose.Schema({
-  period: {
-    date: Date,
-    type: String,
-    required: true,
-    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-  },
-  subject: {
-    type: String,
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
     required: true
   },
-  time: {
-    type: String,
+  booking: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Booking',
     required: true
   }
 });

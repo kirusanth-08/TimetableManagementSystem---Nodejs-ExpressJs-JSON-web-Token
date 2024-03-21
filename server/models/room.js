@@ -10,22 +10,6 @@ const RoomSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  bookings: [
-    {
-      date: {
-        type: Date,
-        required: true
-      },
-      startTime: {
-        type: Date, // Storing time as a Date object
-        required: true
-      },
-      endTime: {
-        type: Date, // Storing time as a Date object
-        required: true
-      }
-    }
-  ],
   details: {
     type: String
   }

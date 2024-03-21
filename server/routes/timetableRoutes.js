@@ -5,7 +5,9 @@ const authenticate = require("../middleware/authMiddleware");
 const authorize = require("../middleware/authzMiddleware");
 
 // Create a new timetable entry
-router.post("/api/timetable", authenticate, authorize('admin', 'faculty'), timetableController.createEntry);
+router.post('/api/timetable', timetableController.createEntry);
+
+// router.post("/api/timetable", authenticate, authorize('admin', 'faculty'), timetableController.createEntry);
 
 // Get all timetable entries
 router.get("/api/timetable", authenticate , timetableController.getEntries);
