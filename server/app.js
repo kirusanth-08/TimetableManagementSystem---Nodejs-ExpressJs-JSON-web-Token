@@ -8,7 +8,8 @@ const cookieParser = require('cookie-parser');
 // Import routes
 const userRoutes = require('./routes/userRoutes');
 const courseRoutes = require('./routes/courseRoutes');
-const timetableRoutes = require('./routes/timetableRoutes');
+// const timetableRoutes = require('./routes/timetableRoutes');
+const bookingRoutes = require('./routes/bookinRoute');
 const loginRoute = require('./routes/loginRoute');
 const enrollmentRoute = require('./routes/enrollmentRoutes');
 const roomRoutes = require('./routes/roomRoutes');
@@ -35,7 +36,8 @@ app.use(cookieParser());
 app.use(loginRoute);
 app.use(userRoutes);
 app.use(courseRoutes);
-app.use(timetableRoutes);
+// app.use(timetableRoutes);
+app.use(bookingRoutes);
 app.use(enrollmentRoute);
 app.use(roomRoutes);
 

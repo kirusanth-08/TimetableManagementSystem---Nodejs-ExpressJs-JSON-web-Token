@@ -1,88 +1,58 @@
 const Booking = require("../models/booking");
+const Timetable = require("../models/Timetable");
 
 const bookingController = {
-  createBooking: async (location, date, startTime, endTime, type) => {
-    // Check for overlapping bookings
-    const overlap = await Booking.findOne({
-      location,
-      date,
-      $or: [
-        { startTime: { $gte: startTime, $lt: endTime } },
-        { endTime: { $gt: startTime, $lte: endTime } },
-        { startTime: { $lte: startTime }, endTime: { $gte: endTime } },
-      ],
-    });
 
-    if (overlap) {
-      return res.status(409).json("Already a booking found, Booking failed");
-    }
-
-    // Create a new booking
-    const newBooking = new Booking({
-      location,
-      date,
-      startTime,
-      endTime,
-      type,
-    });
-    await newBooking.save();
-    return res.status(200).json("Booking scheduled successfully.");
-  },
-
-  getBookings: async (res) => {
+  getTimetableEntry: async (req, res) => {
     try {
-      const bookings = await Booking.find();
-      res.json(bookings);
+      const timetableEntry = await Timetable.findById(req.params.id).populate('course booking');
+      res.json(timetableEntry);
     } catch (error) {
-      res.status(500).json({ message: "Error fetching bookings", error });
+      res.status(500).json({ message: 'Error getting timetable entry', error });
     }
   },
 
-  getBooking: async (req, res) => {
+
+  addTimetableEntry: async (req, res) => {
     try {
-      const booking = await Booking.findById(req.params.id);
-      if (!booking) {
-        return res.status(404).json({ message: "Booking not found" });
+      const { location, date, startTime, endTime, course, bookingType } = req.body;
+      const sameDay = await Booking.findOne({
+        location,
+        date
+      });
+
+
+      if (sameDay) {
+        if((sameDay.startTime <= startTime && sameDay.endTime >= startTime) || (sameDay.startTime <= endTime && sameDay.endTime >= endTime) || (sameDay.startTime >= startTime && sameDay.endTime <= endTime)){
+          return res.status(409).json("Already a booking found, Booking failed");
+        }
       }
-      res.json(booking);
+
+      const booking = new Booking(req.body);
+      await booking.save();
+
+      
+      // Create a new timetable entry with the booking's ID and the courseId
+      const timetableEntry = new Timetable({ booking: booking._id, course: course });
+      await timetableEntry.save();
+
+
+      res.status(201).send({ booking });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching booking", error });
+      res.status(400).send({ error: error.message });
     }
   },
 
-  updateBooking: async (id, location, date, startTime, endTime, type) => {
-    // Check for overlapping bookings
-    const booking = await Booking.findById(req.params.id);
-    if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
-    }
-
-    const overlap = await Booking.findOne({
-      location,
-      date,
-      $or: [
-        { startTime: { $gte: startTime, $lt: endTime } },
-        { endTime: { $gt: startTime, $lte: endTime } },
-        { startTime: { $lte: startTime }, endTime: { $gte: endTime } },
-      ],
-    });
-
-    if (overlap) {
-      return res.status(409).json("Already a booking found, update failed");
-    }
-
-    // Create a new booking
-    booking.findByIdAndUpdate(id, {  location, date, startTime, endTime, type});
-    return res.status(200).json("Booking updated successfully.");
-  },
 
   deleteBooking: async (req, res) => {
     try {
       const booking = await Booking.findByIdAndDelete(req.params.id);
+
       if (!booking) {
         return res.status(404).json({ message: "Booking not found" });
       }
-      res.json({ message: "Booking deleted" });
+
+      res.json({ message: "Booking deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: "Error deleting booking", error });
     }

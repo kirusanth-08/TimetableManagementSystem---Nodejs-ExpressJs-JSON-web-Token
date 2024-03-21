@@ -8,15 +8,20 @@ const BookingSchema = new mongoose.Schema({
   bookingType: {
     type: String,
     enum: ["event", "course"],
-    // required: true,
+    required: true,
   },
   startTime: {
-    type: Date,
+    type: Number,
     required: true,
   },
   endTime: {
-    type: Date,
+    type: Number,
     required: true,
+  },
+  location: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Room',
+    required: true
   },
 });
 

@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const authenticate = require('../middleware/authMiddleware');
+const verifyUser = require('../middleware/verifyUser');
 
 // Create a new user
 router.post('/api/users', userController.createUser);
@@ -9,7 +11,7 @@ router.post('/api/users', userController.createUser);
 router.get('/api/users', userController.getUsers);
 
 // Get user by id
-router.get('/api/users/:id', userController.getUser);
+router.get('/api/users/:id', authenticate, verifyUser, userController.getUser);
 
 // Update a user
 router.put('/api/users/:id', userController.updateUser);

@@ -14,7 +14,7 @@ const verifyUser = (req, res, next) => {
     }
 
     // Check if user is the same as the one in the token
-    if (req.body.userId === decoded.userId || req.params.userId === decoded.userId) {
+    if (req.body.userId === decoded.userId || req.params.id === decoded.userId) {
       next(); // User is the same, proceed to the next middleware
     } else {
       return res.status(403).json({ message: 'Unauthorized' });
