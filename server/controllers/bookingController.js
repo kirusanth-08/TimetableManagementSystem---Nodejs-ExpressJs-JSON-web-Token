@@ -45,6 +45,16 @@ const bookingController = {
       });
       await timetableEntry.save();
 
+      const notification = new Notification({
+        title: "New Booking",
+        message: `A new booking has been created for ${course}`,
+        faculty: course.faculty,
+        year: course.year,
+        semester: course.semester,
+      });
+
+      await notification.save();
+
       res.status(201).send({ booking });
     } catch (error) {
       res.status(400).send({ error: error.message });
@@ -95,6 +105,17 @@ const bookingController = {
       //   return res.status(404).send();
       // }
 
+      
+      const notification = new Notification({
+        title: "Timetable update",
+        message: `Time for ${course} is updated`,
+        faculty: course.faculty,
+        year: course.year,
+        semester: course.semester,
+      });
+
+      await notification.save();
+
       res.send({ booking });
     } catch (error) {
       res.status(400).send({ error: error.message });
@@ -117,6 +138,18 @@ const bookingController = {
     if (!booking) {
       return res.status(404).send();
     }
+
+
+    
+    const notification = new Notification({
+      title: "Timetable update",
+      message: `Location for ${course} is updated`,
+      faculty: course.faculty,
+      year: course.year,
+      semester: course.semester,
+    });
+
+    await notification.save();
 
 
 
