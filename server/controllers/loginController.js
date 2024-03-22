@@ -1,4 +1,4 @@
-const User = require('../models/user'); // Assuming your User model is in a 'models' directory
+const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');

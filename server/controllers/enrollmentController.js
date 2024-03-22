@@ -1,13 +1,21 @@
 const Enrollment = require("../models/enrollment");
+const User = require("../models/User");
 
 const enrollmentController = {
   enrollCourse: async (req, res) => {
     try {
+      const enroller = await User.findById(req.body.student);
+
+      if (enroller.role !== "student") {
+        return res.status(403).json({ message: "Enroller is not a student" });
+      }
+
       // Check if the user is already enrolled in the course
       const existingEnrollment = await Enrollment.findOne({
         course: req.body.course,
-        student: req.user.id,
+        student: req.body.student,
       });
+
       if (existingEnrollment) {
         return res
           .status(400)
@@ -17,7 +25,7 @@ const enrollmentController = {
       // Create a new enrollment
       const enrollment = new Enrollment({
         course: req.body.course,
-        student: req.user.id,
+        student: req.body.student,
       });
       await enrollment.save();
 
@@ -41,24 +49,11 @@ const enrollmentController = {
   getEnrolledStudents: async (req, res) => {
     try {
       const enrollments = await Enrollment.find({
-        course: req.body.courseId,
+        course: req.params.courseId,
       }).populate("course student");
       res.json(enrollments);
     } catch (error) {
       res.status(500).json({ message: "Error fetching enrollments", error });
-    }
-  },
-
-  updateEnrollment: async (req, res) => {
-    try {
-      const enrollment = await Enrollment.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-      );
-      res.json(enrollment);
-    } catch (error) {
-      res.status(500).json({ message: "Error updating enrollment", error });
     }
   },
 

@@ -1,11 +1,11 @@
 const Notification = require("../models/notification");
-const user = require("../models/user");
+const User = require('../models/User');
 
 const getNotification = async (req, res) => {
   try {
     const userId = req.params.id; // Assuming the user ID is passed as a URL parameter
 
-    const user = await user.findOne({ _id: userId });
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
       return res.status(404).json({
