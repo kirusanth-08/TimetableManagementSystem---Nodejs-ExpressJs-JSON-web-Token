@@ -6,7 +6,7 @@ const verifyUser = require('../middleware/verifyUser');
 const authorize = require('../middleware/authzMiddleware');
 
 // Create a new user
-router.post('/api/users', userController.createUser);
+router.post('/api/users', authenticate, authorize('admin'), userController.createUser);
 
 // Get all users
 router.get('/api/users', authenticate, authorize('admin', 'faculty'), userController.getUsers);
@@ -21,6 +21,6 @@ router.get('/api/users/:id', authenticate, verifyUser, userController.getUser);
 router.put('/api/users/:id', authenticate, verifyUser, userController.updateUser);
 
 // Delete a user
-router.delete('/api/users/:id', authenticate, verifyUser, userController.deleteUser);
+router.delete('/api/users/:id', authenticate, authorize('admin'), userController.deleteUser);
 
 module.exports = router;

@@ -10,9 +10,9 @@ const createCourse = async (req, res) => {
   }
 };
 
-const getCourses = async (req, res) => {
+const getFacultyCourses = async (req, res) => {
   try {
-    const courses = await Course.find({});
+    const courses = await Course.find({ faculty: req.params.faculty });
     res.send(courses);
   } catch (error) {
     res.status(500).send({ error: 'Internal Server Error' });
@@ -57,7 +57,7 @@ const deleteCourse = async (req, res) => {
 
 module.exports = {
   createCourse,
-  getCourses,
+  getFacultyCourses,
   getCourse,
   updateCourse,
   deleteCourse

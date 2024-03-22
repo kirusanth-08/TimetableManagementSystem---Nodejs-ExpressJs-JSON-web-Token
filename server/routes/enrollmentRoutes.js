@@ -8,10 +8,10 @@ const verifyUser = require('../middleware/verifyUser');
 // Create a new enrollment
 router.post('/api/enrollment', authenticate, authorize("admin"), enrollmentController.enrollCourse);
 
-// Get all enrollments
+// Get all enrolled students of a course
 router.get('/api/enrolledStudents/:id', authenticate, authorize('admin'), enrollmentController.getEnrolledStudents);
 
-// Get enrollment by id
+// Get all enrolled courses of a student
 router.get('/api/enrolledCourses/:id', authenticate, enrollmentController.getEnrolledCourses);
 
 // Delete an enrollment

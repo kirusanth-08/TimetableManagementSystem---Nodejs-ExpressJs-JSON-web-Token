@@ -8,7 +8,7 @@ const authorize = require('../middleware/authzMiddleware');
 router.post('/api/courses', authenticate, authorize(['admin']), courseController.createCourse);
 
 // Get all courses
-router.get('/api/courses', authenticate, courseController.getCourses);
+router.get('/api/courses/faculty/:faculty', courseController.getFacultyCourses);
 
 // Get course by id
 router.get('/api/courses/:id', courseController.getCourse);

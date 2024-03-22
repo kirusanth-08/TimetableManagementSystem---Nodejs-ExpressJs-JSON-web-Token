@@ -5,11 +5,11 @@ const authenticate = require('../middleware/authMiddleware');
 const verifyUser = require('../middleware/verifyUser');
 const authorize = require('../middleware/authzMiddleware');
 
-// Route for creating a notification
-router.get('/notifications/:id', authenticate, verifyUser, notificationController.getNotification);
+// get notifications for a user
+router.get('/api/notifications/:id', authenticate, verifyUser, notificationController.getNotification);
 
 // Route for deleting a notification
-router.delete('/notifications/:id', authenticate, authorize("admin", "faculty"), notificationController.createNotification);
+router.delete('/api/notifications/:id', authenticate, authorize("admin", "faculty"), notificationController.createNotification);
 
 
 module.exports = router;

@@ -3,6 +3,7 @@ const Timetable = require("../models/Timetable");
 const Notification = require("../models/notification");
 const Course = require("../models/course");
 const notificationController = require("../controllers/notificationController");
+const { find } = require("../models/User");
 
 const bookingController = {
   getTimetableEntry: async (req, res) => {
@@ -38,7 +39,6 @@ const bookingController = {
         }
       }
 
-      
       const courseObj = await Course.findById(course);
 
       const notification = new Notification({
@@ -61,8 +61,6 @@ const bookingController = {
       });
       await timetableEntry.save();
 
-
-
       res.status(201).send({ booking });
     } catch (error) {
       res.status(400).send({ error: error.message });
@@ -72,17 +70,16 @@ const bookingController = {
   //update the time of an entry in the timetable
   updateTimetableTime: async (req, res) => {
     try {
-      const {  date, startTime, endTime } = req.body;
+      const { date, startTime, endTime } = req.body;
       const bookingId = req.params.id; // Assuming the booking ID is passed as a URL parameter
       const course = await Timetable.findById(bookingId).populate("course");
       const { location } = await Booking.findById(bookingId);
-  
+
       const sameDayBookings = await Booking.find({
         _id: { $ne: bookingId },
         location,
         date,
       });
-
 
       for (let sameDay of sameDayBookings) {
         if (
@@ -106,18 +103,18 @@ const bookingController = {
         return res.status(404).send("Booking not found");
       }
 
-// Update the timetable entry with the new courseId
-// const timetableEntry = await Timetable.findOneAndUpdate(
-//   { booking: booking._id },
-//   { course: course },
-//   { new: true, runValidators: true }
-// );
+      // Update the timetable entry with the new courseId
+      // const timetableEntry = await Timetable.findOneAndUpdate(
+      //   { booking: booking._id },
+      //   { course: course },
+      //   { new: true, runValidators: true }
+      // );
 
-// if (!timetableEntry) {
-//   return res.status(404).send();
-// }
+      // if (!timetableEntry) {
+      //   return res.status(404).send();
+      // }
       const courseObj = await Course.findById(course);
-      
+
       const notification = new Notification({
         title: "Timetable updated",
         content: `Time for ${courseObj.name} is changed to ${date}, ${startTime} - ${endTime}`,
@@ -133,66 +130,63 @@ const bookingController = {
       res.status(400).send({ error: error.message });
     }
   },
-  
-  
+
   //update the location of an entry in the timetable
- updateLocation: async (req, res) => {
-  try {
-    const { location } = req.body;
-    const bookingId = req.params.id; // Assuming the timetable ID is passed as a URL parameter
+  updateLocation: async (req, res) => {
+    try {
+      const { location } = req.body;
+      const bookingId = req.params.id; // Assuming the timetable ID is passed as a URL parameter
 
-    const course = await Timetable.findById(bookingId).populate("course");
+      const course = await Timetable.findById(bookingId).populate("course");
 
-    const { date, startTime, endTime } = await Booking.findById(bookingId);
+      const { date, startTime, endTime } = await Booking.findById(bookingId);
 
-    
-    const sameDayBookings = await Booking.find({
-      _id: { $ne: bookingId },
-      location,
-      date,
-    });
+      const sameDayBookings = await Booking.find({
+        _id: { $ne: bookingId },
+        location,
+        date,
+      });
 
-    for (let sameDay of sameDayBookings) {
-      if (
-        (sameDay.startTime <= startTime && sameDay.endTime > startTime) ||
-        (sameDay.startTime < endTime && sameDay.endTime >= endTime) ||
-        (sameDay.startTime >= startTime && sameDay.endTime <= endTime) ||
-        (sameDay.startTime <= startTime && sameDay.endTime >= endTime)
-      ) {
-        return res
-          .status(409)
-          .json("Already a booking found, Booking failed");
+      for (let sameDay of sameDayBookings) {
+        if (
+          (sameDay.startTime <= startTime && sameDay.endTime > startTime) ||
+          (sameDay.startTime < endTime && sameDay.endTime >= endTime) ||
+          (sameDay.startTime >= startTime && sameDay.endTime <= endTime) ||
+          (sameDay.startTime <= startTime && sameDay.endTime >= endTime)
+        ) {
+          return res
+            .status(409)
+            .json("Already a booking found, Booking failed");
+        }
       }
+
+      const booking = await Booking.findByIdAndUpdate(
+        bookingId,
+        { location },
+        { new: true, runValidators: true }
+      );
+
+      if (!booking) {
+        return res.status(404).send();
+      }
+
+      const courseObj = await Course.findById(course);
+
+      const notification = new Notification({
+        title: `Location changed for ${courseObj.name}`,
+        content: `Location for ${courseObj.name} is changed to ${location}`,
+        faculty: courseObj.faculty,
+        year: courseObj.year,
+        semester: courseObj.semester,
+      });
+
+      await notification.save();
+
+      res.send({ booking });
+    } catch (error) {
+      res.status(400).send({ error: error.message });
     }
-
-    const booking = await Booking.findByIdAndUpdate(
-      bookingId,
-      { location },
-      { new: true, runValidators: true }
-    );
-
-    if (!booking) {
-      return res.status(404).send();
-    }
-
-
-    const courseObj = await Course.findById(course);
-      
-    const notification = new Notification({
-      title: `Location changed for ${courseObj.name}`,
-      content: `Location for ${courseObj.name} is changed to ${location}`,
-      faculty: courseObj.faculty,
-      year: courseObj.year,
-      semester: courseObj.semester,
-    });
-
-    await notification.save();
-
-    res.send({ booking });
-  } catch (error) {
-    res.status(400).send({ error: error.message });
-  }
-},
+  },
 
   deleteBooking: async (req, res) => {
     try {
@@ -201,6 +195,19 @@ const bookingController = {
       if (!booking) {
         return res.status(404).json({ message: "Booking not found" });
       }
+
+      const course = Course.findById(booking.course);
+      const courseObj = await Course.findById(course);
+
+      const notification = new Notification({
+        title: `Session cancelled for ${courseObj.name}`,
+        content: `Session for ${courseObj.name} is cancelled!`,
+        faculty: courseObj.faculty,
+        year: courseObj.year,
+        semester: courseObj.semester,
+      });
+
+      await notification.save();
 
       await Timetable.findOneAndDelete({ booking: req.params.id });
       res.json({ message: "Booking deleted successfully" });
