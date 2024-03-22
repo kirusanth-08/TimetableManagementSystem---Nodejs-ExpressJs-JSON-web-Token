@@ -21,6 +21,13 @@ const getNotification = async (req, res) => {
       semester: user.semester,
     });
 
+    if (!notifications) {
+      return res.status(404).json({
+        success: false,
+        error: "No notifications found",
+      });
+    }
+
     res.status(200).json(notifications);
   } catch (error) {
     res.status(500).json({
@@ -56,7 +63,36 @@ const createNotification = async (req, res) => {
   }
 };
 
+const deleteNotification = async (req, res) => {
+  try {
+    const notificationId = req.params.id; // Assuming the notification ID is passed as a URL parameter
+
+    const notification = await Notification.findById(notificationId);
+
+    if (!notification) {
+      return res.status(404).json({
+        success: false,
+        error: "Notification not found",
+      });
+    }
+
+    await notification.remove();
+
+    res.status(200).json({
+      success: true,
+      data: {},
+      message: "Notification deleted",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Server Error",
+    });
+  }
+};
+
 module.exports = {
   getNotification,
   createNotification,
+  deleteNotification,
 };

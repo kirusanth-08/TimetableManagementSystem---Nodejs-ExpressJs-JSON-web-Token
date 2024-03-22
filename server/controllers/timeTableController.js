@@ -18,11 +18,15 @@ const getTimetable = async (req, res) => {
 
     // Find all timetable entries where the courseId matches one of the courseIds
     const timetable = await Timetable.find({ course: { $in: courseIds } })
-      .populate('course', 'name') // Replace 'course' with the actual Course document and only include the 'name' field
-      .populate({
-        path: 'booking', // Replace 'booking' with the actual Booking document
-        select: 'startTime endTime' // Only include the 'startTime' and 'endTime' fields
-      });
+  .populate('course', 'name faculty year semester -_id') // Replace 'course' with the actual Course document and only include the 'name' field
+  .populate({
+    path: 'booking', // Replace 'booking' with the actual Booking document
+    select: 'location date startTime endTime -_id', // Include the 'location', 'date', 'startTime', and 'endTime' fields
+    populate: {
+      path: 'location', // Replace 'location' with the actual Location document
+      select: 'name -_id' // Only include the 'name' field
+    }
+  });
 
 
     if (!timetable) {

@@ -8,4 +8,8 @@ const authorize = require('../middleware/authzMiddleware');
 // Route for creating a notification
 router.get('/notifications/:id', authenticate, verifyUser, notificationController.getNotification);
 
+// Route for deleting a notification
+router.delete('/notifications/:id', authenticate, authorize("admin", "faculty"), notificationController.createNotification);
+
+
 module.exports = router;
