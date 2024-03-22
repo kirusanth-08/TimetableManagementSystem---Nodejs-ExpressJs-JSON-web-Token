@@ -1,7 +1,7 @@
 {
-  "name": "labsheet2-af",
+  "name": "assignment-01-kirusanth-08",
   "version": "1.0.0",
-  "description": "An app created for learn node js",
+  "description": "Timetable management system for Application Frameworks",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
