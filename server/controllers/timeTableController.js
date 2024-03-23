@@ -23,7 +23,7 @@ const getTimetable = async (req, res) => {
         select: "location date startTime endTime -_id",
         populate: {
           path: "location",
-          select: "name -_id",
+          select: "code -_id",
         },
       });
 
@@ -57,13 +57,13 @@ const getStudentTimetable = async (req, res) => {
 
     // Find all timetable entries where the courseId matches one of the courseIds
     const timetable = await Timetable.find({ course: { $in: courseIds } })
-      .populate("course", "name faculty year semester -_id") // Replace 'course' with the actual Course document and only include the 'name' field
+      .populate("course", "name faculty year semester -_id")
       .populate({
-        path: "booking", // Replace 'booking' with the actual Booking document
-        select: "location date startTime endTime -_id", // Include the 'location', 'date', 'startTime', and 'endTime' fields
+        path: "booking",
+        select: "location date startTime endTime -_id",
         populate: {
-          path: "location", // Replace 'location' with the actual Location document
-          select: "name -_id", // Only include the 'name' field
+          path: "location",
+          select: "code -_id",
         },
       });
 
@@ -103,7 +103,8 @@ const getTimetableForStudent = async (req, res) => {
       }
     });
 
-    // console.log(sortedBookings);
+
+    console.log(sortedBookings);
 
     // const timetable = bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
 

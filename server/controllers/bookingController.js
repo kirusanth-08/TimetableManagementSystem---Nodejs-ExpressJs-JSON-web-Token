@@ -25,12 +25,26 @@ const bookingController = {
         date,
       });
 
+      
+      let start = parseFloat(startTime);
+      let end = parseFloat(endTime);
+
+      if((end - start) < 0) {
+        return res.status(400).json("End time cannot be earlier than start time");
+      }else if((end - start) > 5) {
+        return res.status(400).json("A timetable allocation can't' be more than 5 hours");
+      }else if((start < 8 || start > 19) || (end < 8 || end > 19)) {
+        return res.status(400).json("A timetable allocation can only be set between 8am and 7pm (choose between 9.00 to 19.00)");
+      }else if(end - start < 1){
+        return res.status(400).json("A timetable allocation can't be less than 1 hour");
+      }else if(start % 1 > 0.60 || end % 1 > 0.60){
+        return res.status(400).json("Invalid time");
+      }
+
       for (let sameDay of sameDayBookings) {
         // Convert strings to numbers
         let sameDayStart = parseFloat(sameDay.startTime);
         let sameDayEnd = parseFloat(sameDay.endTime);
-        let start = parseFloat(startTime);
-        let end = parseFloat(endTime);
       
         if (
           (sameDayStart <= start && sameDayEnd > start) ||
@@ -86,12 +100,27 @@ const bookingController = {
         date,
       });
 
+      
+      
+      let start = parseFloat(startTime);
+      let end = parseFloat(endTime);
+
+      if((end - start) < 0) {
+        return res.status(400).json("End time cannot be earlier than start time");
+      }else if((end - start) > 5) {
+        return res.status(400).json("A timetable allocation can't' be more than 5 hours");
+      }else if((start < 8 || start > 19) || (end < 8 || end > 19)) {
+        return res.status(400).json("A timetable allocation can only be set between 8am and 7pm (choose between 9.00 to 19.00)");
+      }else if(end - start < 1){
+        return res.status(400).json("A timetable allocation can't be less than 1 hour");
+      }else if(start % 1 > 0.60 || end % 1 > 0.60){
+        return res.status(400).json("Invalid time");
+      }
+
       for (let sameDay of sameDayBookings) {
         // Convert strings to numbers
         let sameDayStart = parseFloat(sameDay.startTime);
         let sameDayEnd = parseFloat(sameDay.endTime);
-        let start = parseFloat(startTime);
-        let end = parseFloat(endTime);
       
         if (
           (sameDayStart <= start && sameDayEnd > start) ||
@@ -146,12 +175,14 @@ const bookingController = {
         date,
       });
 
+      
+      let start = parseFloat(startTime);
+      let end = parseFloat(endTime);
+
       for (let sameDay of sameDayBookings) {
         // Convert strings to numbers
         let sameDayStart = parseFloat(sameDay.startTime);
         let sameDayEnd = parseFloat(sameDay.endTime);
-        let start = parseFloat(startTime);
-        let end = parseFloat(endTime);
       
         if (
           (sameDayStart <= start && sameDayEnd > start) ||
