@@ -10,7 +10,6 @@ const enrollmentController = {
         return res.status(403).json({ message: "Enroller is not a student" });
       }
 
-      // Check if the user is already enrolled in the course
       const existingEnrollment = await Enrollment.findOne({
         course: req.body.course,
         student: req.body.student,
@@ -22,7 +21,6 @@ const enrollmentController = {
           .json({ message: "You are already enrolled in this course" });
       }
 
-      // Create a new enrollment
       const enrollment = new Enrollment({
         course: req.body.course,
         student: req.body.student,

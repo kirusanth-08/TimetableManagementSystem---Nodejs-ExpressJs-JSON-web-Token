@@ -10,13 +10,13 @@ router.post('/api/courses', authenticate, authorize(['admin']), courseController
 // Get all courses
 router.get('/api/courses/faculty/:faculty', courseController.getFacultyCourses);
 
-// Get course by id
-router.get('/api/courses/:id', courseController.getCourse);
+// Get course by course code
+router.get('/api/courses/:code', courseController.getCourse);
 
-// Update a course
-router.put('/api/courses/:id', authenticate, authorize(['admin']), courseController.updateCourse);
+// Update a course by course code
+router.put('/api/courses/:code', authenticate, authorize(['admin']), courseController.updateCourse);
 
 // Delete a course
-router.delete('/api/courses/:id', authenticate, authorize(['admin']), courseController.deleteCourse);
+router.delete('/api/courses/:code', authenticate, authorize(['admin']), courseController.deleteCourse);
 
 module.exports = router;

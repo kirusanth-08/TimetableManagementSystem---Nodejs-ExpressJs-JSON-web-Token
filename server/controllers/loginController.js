@@ -8,7 +8,6 @@ const login = async (req, res) => {
     const { username, password } = req.body;
   
     try {
-      // Find user by username in the database
       const user = await User.findOne({ username });
   
       if (!user) {
@@ -22,7 +21,7 @@ const login = async (req, res) => {
 
         // Set JWT token as a cookie in the response
         res.cookie('accessToken', token, {
-          maxAge: 20 * 60 * 1000, // Expiration time in milliseconds (20 minutes)
+          maxAge: 25 * 60 * 1000, // Expiration time in milliseconds (20 minutes)
           httpOnly: true, // Cookie is accessible only through HTTP requests
           secure: true, // Cookie is sent only over HTTPS (if your application uses HTTPS)
           sameSite: 'strict', // Restricts cookie to be sent only with same-site requests

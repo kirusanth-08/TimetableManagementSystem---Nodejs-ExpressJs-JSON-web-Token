@@ -5,4 +5,5 @@ Kindly check follwing repository check the timestamps of me commits:
 Seperate Folders, files created for Models, Controllers, Routes, Middleware, configuration file(.env)
 
 
-npm start: Start development server
+"npm start": Start development server
+"npm run devStart":  Start development server, automatically restarts whenever code changes occur.

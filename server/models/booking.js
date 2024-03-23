@@ -11,12 +11,14 @@ const BookingSchema = new mongoose.Schema({
     required: true,
   },
   startTime: {
-    type: Number,
+    type: String,
     required: true,
+    set: v => parseFloat(v).toFixed(2)
   },
   endTime: {
-    type: Number,
+    type: String,
     required: true,
+    set: v => parseFloat(v).toFixed(2)
   },
   location: {
     type: mongoose.Schema.Types.ObjectId,

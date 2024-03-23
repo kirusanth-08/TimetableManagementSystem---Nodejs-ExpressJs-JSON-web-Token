@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 const getNotification = async (req, res) => {
   try {
-    const userId = req.params.id; // Assuming the user ID is passed as a URL parameter
+    const userId = req.params.id;
 
     const user = await User.findOne({ _id: userId });
 
@@ -65,7 +65,7 @@ const createNotification = async (req, res) => {
 
 const deleteNotification = async (req, res) => {
   try {
-    const notificationId = req.params.id; // Assuming the notification ID is passed as a URL parameter
+    const notificationId = req.params.id;
 
     const notification = await Notification.findById(notificationId);
 

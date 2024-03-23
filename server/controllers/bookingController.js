@@ -2,8 +2,7 @@ const Booking = require("../models/booking");
 const Timetable = require("../models/Timetable");
 const Notification = require("../models/notification");
 const Course = require("../models/course");
-const notificationController = require("../controllers/notificationController");
-const { find } = require("../models/User");
+const Room = require("../models/room");
 
 const bookingController = {
   getTimetableEntry: async (req, res) => {
@@ -27,11 +26,17 @@ const bookingController = {
       });
 
       for (let sameDay of sameDayBookings) {
+        // Convert strings to numbers
+        let sameDayStart = parseFloat(sameDay.startTime);
+        let sameDayEnd = parseFloat(sameDay.endTime);
+        let start = parseFloat(startTime);
+        let end = parseFloat(endTime);
+      
         if (
-          (sameDay.startTime <= startTime && sameDay.endTime > startTime) ||
-          (sameDay.startTime < endTime && sameDay.endTime >= endTime) ||
-          (sameDay.startTime >= startTime && sameDay.endTime <= endTime) ||
-          (sameDay.startTime <= startTime && sameDay.endTime >= endTime)
+          (sameDayStart <= start && sameDayEnd > start) ||
+          (sameDayStart < end && sameDayEnd >= end) ||
+          (sameDayStart >= start && sameDayEnd <= end) ||
+          (sameDayStart <= start && sameDayEnd >= end)
         ) {
           return res
             .status(409)
@@ -39,6 +44,7 @@ const bookingController = {
         }
       }
 
+      
       const courseObj = await Course.findById(course);
 
       const notification = new Notification({
@@ -72,9 +78,8 @@ const bookingController = {
     try {
       const { date, startTime, endTime } = req.body;
       const bookingId = req.params.id; // Assuming the booking ID is passed as a URL parameter
-      const course = await Timetable.findById(bookingId).populate("course");
+      const { course } = await Timetable.findOne({ booking: bookingId });
       const { location } = await Booking.findById(bookingId);
-
       const sameDayBookings = await Booking.find({
         _id: { $ne: bookingId },
         location,
@@ -82,11 +87,17 @@ const bookingController = {
       });
 
       for (let sameDay of sameDayBookings) {
+        // Convert strings to numbers
+        let sameDayStart = parseFloat(sameDay.startTime);
+        let sameDayEnd = parseFloat(sameDay.endTime);
+        let start = parseFloat(startTime);
+        let end = parseFloat(endTime);
+      
         if (
-          (sameDay.startTime <= startTime && sameDay.endTime > startTime) ||
-          (sameDay.startTime < endTime && sameDay.endTime >= endTime) ||
-          (sameDay.startTime >= startTime && sameDay.endTime <= endTime) ||
-          (sameDay.startTime <= startTime && sameDay.endTime >= endTime)
+          (sameDayStart <= start && sameDayEnd > start) ||
+          (sameDayStart < end && sameDayEnd >= end) ||
+          (sameDayStart >= start && sameDayEnd <= end) ||
+          (sameDayStart <= start && sameDayEnd >= end)
         ) {
           return res
             .status(409)
@@ -102,19 +113,8 @@ const bookingController = {
       if (!booking) {
         return res.status(404).send("Booking not found");
       }
-
-      // Update the timetable entry with the new courseId
-      // const timetableEntry = await Timetable.findOneAndUpdate(
-      //   { booking: booking._id },
-      //   { course: course },
-      //   { new: true, runValidators: true }
-      // );
-
-      // if (!timetableEntry) {
-      //   return res.status(404).send();
-      // }
       const courseObj = await Course.findById(course);
-
+      console.log(course)
       const notification = new Notification({
         title: "Timetable updated",
         content: `Time for ${courseObj.name} is changed to ${date}, ${startTime} - ${endTime}`,
@@ -137,10 +137,9 @@ const bookingController = {
       const { location } = req.body;
       const bookingId = req.params.id; // Assuming the timetable ID is passed as a URL parameter
 
-      const course = await Timetable.findById(bookingId).populate("course");
+      const {course} = await Timetable.findOne({ booking: bookingId });
 
       const { date, startTime, endTime } = await Booking.findById(bookingId);
-
       const sameDayBookings = await Booking.find({
         _id: { $ne: bookingId },
         location,
@@ -148,11 +147,17 @@ const bookingController = {
       });
 
       for (let sameDay of sameDayBookings) {
+        // Convert strings to numbers
+        let sameDayStart = parseFloat(sameDay.startTime);
+        let sameDayEnd = parseFloat(sameDay.endTime);
+        let start = parseFloat(startTime);
+        let end = parseFloat(endTime);
+      
         if (
-          (sameDay.startTime <= startTime && sameDay.endTime > startTime) ||
-          (sameDay.startTime < endTime && sameDay.endTime >= endTime) ||
-          (sameDay.startTime >= startTime && sameDay.endTime <= endTime) ||
-          (sameDay.startTime <= startTime && sameDay.endTime >= endTime)
+          (sameDayStart <= start && sameDayEnd > start) ||
+          (sameDayStart < end && sameDayEnd >= end) ||
+          (sameDayStart >= start && sameDayEnd <= end) ||
+          (sameDayStart <= start && sameDayEnd >= end)
         ) {
           return res
             .status(409)
@@ -171,10 +176,11 @@ const bookingController = {
       }
 
       const courseObj = await Course.findById(course);
+      const { code } = await Room.findById(location);
 
       const notification = new Notification({
         title: `Location changed for ${courseObj.name}`,
-        content: `Location for ${courseObj.name} is changed to ${location}`,
+        content: `Location for ${courseObj.name} is changed to ${code}`,
         faculty: courseObj.faculty,
         year: courseObj.year,
         semester: courseObj.semester,
