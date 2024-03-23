@@ -82,43 +82,41 @@ const getTimetableForStudent = async (req, res) => {
     const course = await Course.find({ faculty, year, semester });
     const courseIds = course.map((course) => course._id);
 
-    const bookings = await Timetable.find({ course: { $in: courseIds } })
-      .populate("course", "name faculty year semester -_id")
-      .populate({
-        path: "booking",
-        select: "location date startTime endTime -_id",
-        populate: {
-          path: "location",
-          select: "code -_id",
-        },
-      });
+    const table = await Timetable.find({ course: { $in: courseIds } }).populate(
+      "booking"
+    );
 
-    // Sort bookings by date and then by startTime
-    const sortedBookings = bookings.sort((a, b) => {
-      const dateComparison = new Date(a.date) - new Date(b.date);
-      if (dateComparison !== 0) {
-        return dateComparison;
-      } else {
-        return parseFloat(a.startTime) - parseFloat(b.startTime);
+    const sortedTable = table.sort((a, b) => {
+      const dateA = new Date(a.booking.date);
+      const dateB = new Date(b.booking.date);
+      const startTimeA = parseFloat(a.booking.startTime);
+      const startTimeB = parseFloat(b.booking.startTime);
+
+      // If the dates are different, sort by date
+      if (dateA.getTime() !== dateB.getTime()) {
+        return dateA - dateB;
+      }
+      // If the dates are the same, sort by start time
+      else {
+        return startTimeA - startTimeB;
       }
     });
 
+    const result = sortedTable.map((entry) => {
+      return {
+        date: entry.booking.date,
+        details: {
+          course: entry.course,
+          location: entry.booking.location,
+          startTime: entry.booking.startTime,
+          endTime: entry.booking.endTime,
+        },
+      };
+    });
 
-    console.log(sortedBookings);
+    
+    res.send(result);
 
-    // const timetable = bookings.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    // const timetable = sortedBookings.map(booking => {
-    //   return {
-    //     day: booking.date,
-    //     couse: booking.course.name,
-    //     startTime: booking.startTime,
-    //     endTime: booking.endTime,
-    //     location: booking.location.name
-    //   }
-    // });
-
-    res.send(sortedBookings);
   } catch (error) {
     res.status(500).send(error);
   }
