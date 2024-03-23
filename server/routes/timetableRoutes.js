@@ -4,15 +4,16 @@ const timetableController = require("../controllers/timeTableController");
 const bookingController = require('../controllers/bookingController');
 const authenticate = require('../middleware/authMiddleware');
 const authorize = require('../middleware/authzMiddleware');
+const verifyUser = require('../middleware/returnUserMiddleware');
 
 // get the timetable for specific faculty, year, and semester
 router.get('/api/timetable/:faculty/:year/:semester', timetableController.getTimetable);
 
 // get the timetable for specific student
-router.get('/api/timetable/user/:id', timetableController.getStudentTimetable);
+router.get('/api/timetable/user', authenticate, verifyUser, timetableController.getStudentTimetable);
 
 // get the designed/**************************************************************************** */
-router.get('/api/timetableF/:faculty/:year/:semester', timetableController.getTimetableForStudent);
+// router.get('/api/timetableF/:faculty/:year/:semester', timetableController.getTimetableForStudent);
 
 // Route for get single timetable entry details
 router.get('/api/timetable/:id', bookingController.getTimetableEntry);

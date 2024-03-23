@@ -34,7 +34,7 @@ const getUsersFacultywise = async (req, res) => {
 // Get user by id
 const getUser = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.user._id);
     if (!user) {
       return res.status(404).send();
     }
@@ -47,7 +47,7 @@ const getUser = async (req, res) => {
 // Update a user
 const updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true });
     if (!user) {
       return res.status(404).send();
     }

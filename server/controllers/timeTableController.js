@@ -39,7 +39,7 @@ const getTimetable = async (req, res) => {
 // Get timetable entry for a student
 const getStudentTimetable = async (req, res) => {
   try {
-    const student = req.params;
+    const student = req.user._id;
     const user = await User.findById(student);
     const courses = await Course.find({
       faculty: user.faculty,

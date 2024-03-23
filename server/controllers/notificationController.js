@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 const getNotification = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user._id;
 
     const user = await User.findOne({ _id: userId });
 

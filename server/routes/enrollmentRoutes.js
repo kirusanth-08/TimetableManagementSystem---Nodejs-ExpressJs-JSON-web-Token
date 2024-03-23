@@ -3,7 +3,6 @@ const router = express.Router();
 const enrollmentController = require('../controllers/enrollmentController');
 const authenticate = require('../middleware/authMiddleware');
 const authorize = require('../middleware/authzMiddleware');
-const verifyUser = require('../middleware/verifyUser');
 
 // Create a new enrollment
 router.post('/api/enrollment', authenticate, authorize("admin"), enrollmentController.enrollCourse);
