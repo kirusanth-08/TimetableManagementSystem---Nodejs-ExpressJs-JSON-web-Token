@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const User = require("../models/User");
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -47,7 +47,10 @@ const getUser = async (req, res) => {
 // Update a user
 const updateUser = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true });
+    const user = await User.findByIdAndUpdate(req.user._id, req.body, {
+      new: true,
+      runValidators: true,
+    });
     if (!user) {
       return res.status(404).send();
     }
@@ -76,5 +79,5 @@ module.exports = {
   getUsersFacultywise,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };

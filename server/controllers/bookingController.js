@@ -25,19 +25,28 @@ const bookingController = {
         date,
       });
 
-      
       let start = parseFloat(startTime);
       let end = parseFloat(endTime);
 
-      if((end - start) < 0) {
-        return res.status(400).json("End time cannot be earlier than start time");
-      }else if((end - start) > 5) {
-        return res.status(400).json("A timetable allocation can't' be more than 5 hours");
-      }else if((start < 8 || start > 19) || (end < 8 || end > 19)) {
-        return res.status(400).json("A timetable allocation can only be set between 8am and 7pm (choose between 9.00 to 19.00)");
-      }else if(end - start < 1){
-        return res.status(400).json("A timetable allocation can't be less than 1 hour");
-      }else if(start % 1 > 0.60 || end % 1 > 0.60){
+      if (end - start < 0) {
+        return res
+          .status(400)
+          .json("End time cannot be earlier than start time");
+      } else if (end - start > 5) {
+        return res
+          .status(400)
+          .json("A timetable allocation can't' be more than 5 hours");
+      } else if (start < 8 || start > 19 || end < 8 || end > 19) {
+        return res
+          .status(400)
+          .json(
+            "A timetable allocation can only be set between 8am and 7pm (choose between 9.00 to 19.00)"
+          );
+      } else if (end - start < 1) {
+        return res
+          .status(400)
+          .json("A timetable allocation can't be less than 1 hour");
+      } else if (start % 1 > 0.6 || end % 1 > 0.6) {
         return res.status(400).json("Invalid time");
       }
 
@@ -45,7 +54,7 @@ const bookingController = {
         // Convert strings to numbers
         let sameDayStart = parseFloat(sameDay.startTime);
         let sameDayEnd = parseFloat(sameDay.endTime);
-      
+
         if (
           (sameDayStart <= start && sameDayEnd > start) ||
           (sameDayStart < end && sameDayEnd >= end) ||
@@ -58,7 +67,6 @@ const bookingController = {
         }
       }
 
-      
       const courseObj = await Course.findById(course);
 
       const notification = new Notification({
@@ -91,7 +99,7 @@ const bookingController = {
   updateTimetableTime: async (req, res) => {
     try {
       const { date, startTime, endTime } = req.body;
-      const bookingId = req.params.id; // Assuming the booking ID is passed as a URL parameter
+      const bookingId = req.params.id;
       const { course } = await Timetable.findOne({ booking: bookingId });
       const { location } = await Booking.findById(bookingId);
       const sameDayBookings = await Booking.find({
@@ -100,20 +108,28 @@ const bookingController = {
         date,
       });
 
-      
-      
       let start = parseFloat(startTime);
       let end = parseFloat(endTime);
 
-      if((end - start) < 0) {
-        return res.status(400).json("End time cannot be earlier than start time");
-      }else if((end - start) > 5) {
-        return res.status(400).json("A timetable allocation can't' be more than 5 hours");
-      }else if((start < 8 || start > 19) || (end < 8 || end > 19)) {
-        return res.status(400).json("A timetable allocation can only be set between 8am and 7pm (choose between 9.00 to 19.00)");
-      }else if(end - start < 1){
-        return res.status(400).json("A timetable allocation can't be less than 1 hour");
-      }else if(start % 1 > 0.60 || end % 1 > 0.60){
+      if (end - start < 0) {
+        return res
+          .status(400)
+          .json("End time cannot be earlier than start time");
+      } else if (end - start > 5) {
+        return res
+          .status(400)
+          .json("A timetable allocation can't' be more than 5 hours");
+      } else if (start < 8 || start > 19 || end < 8 || end > 19) {
+        return res
+          .status(400)
+          .json(
+            "A timetable allocation can only be set between 8am and 7pm (choose between 9.00 to 19.00)"
+          );
+      } else if (end - start < 1) {
+        return res
+          .status(400)
+          .json("A timetable allocation can't be less than 1 hour");
+      } else if (start % 1 > 0.6 || end % 1 > 0.6) {
         return res.status(400).json("Invalid time");
       }
 
@@ -121,7 +137,7 @@ const bookingController = {
         // Convert strings to numbers
         let sameDayStart = parseFloat(sameDay.startTime);
         let sameDayEnd = parseFloat(sameDay.endTime);
-      
+
         if (
           (sameDayStart <= start && sameDayEnd > start) ||
           (sameDayStart < end && sameDayEnd >= end) ||
@@ -143,7 +159,7 @@ const bookingController = {
         return res.status(404).send("Booking not found");
       }
       const courseObj = await Course.findById(course);
-      console.log(course)
+      console.log(course);
       const notification = new Notification({
         title: "Timetable updated",
         content: `Time for ${courseObj.name} is changed to ${date}, ${startTime} - ${endTime}`,
@@ -164,9 +180,9 @@ const bookingController = {
   updateLocation: async (req, res) => {
     try {
       const { location } = req.body;
-      const bookingId = req.params.id; // Assuming the timetable ID is passed as a URL parameter
+      const bookingId = req.params.id;
 
-      const {course} = await Timetable.findOne({ booking: bookingId });
+      const { course } = await Timetable.findOne({ booking: bookingId });
 
       const { date, startTime, endTime } = await Booking.findById(bookingId);
       const sameDayBookings = await Booking.find({
@@ -175,7 +191,6 @@ const bookingController = {
         date,
       });
 
-      
       let start = parseFloat(startTime);
       let end = parseFloat(endTime);
 
@@ -183,7 +198,7 @@ const bookingController = {
         // Convert strings to numbers
         let sameDayStart = parseFloat(sameDay.startTime);
         let sameDayEnd = parseFloat(sameDay.endTime);
-      
+
         if (
           (sameDayStart <= start && sameDayEnd > start) ||
           (sameDayStart < end && sameDayEnd >= end) ||

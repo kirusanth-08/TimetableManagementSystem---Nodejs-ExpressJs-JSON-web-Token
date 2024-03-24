@@ -1,6 +1,7 @@
 const Notification = require("../models/notification");
-const User = require('../models/User');
+const User = require("../models/User");
 
+// Find all notifications for the user that match the given faculty, year, and semester
 const getNotification = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -14,7 +15,6 @@ const getNotification = async (req, res) => {
       });
     }
 
-    // Find all notifications for the user that match the given faculty, year, and semester
     const notifications = await Notification.find({
       faculty: user.faculty,
       year: user.year,
@@ -37,6 +37,7 @@ const getNotification = async (req, res) => {
   }
 };
 
+// Create a new notification
 const createNotification = async (req, res) => {
   const { title, message, faculty, year, semester } = req.body;
 
@@ -63,6 +64,7 @@ const createNotification = async (req, res) => {
   }
 };
 
+// Delete a notification
 const deleteNotification = async (req, res) => {
   try {
     const notificationId = req.params.id;

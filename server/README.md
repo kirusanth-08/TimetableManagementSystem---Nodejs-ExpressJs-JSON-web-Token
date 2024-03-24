@@ -5,9 +5,16 @@ Kindly check follwing repository check the timestamps of me commits:
 Seperate Folders, files created for Models, Controllers, Routes, Middleware, configuration file(.env)
 
 
+## Running Scripts
 "npm start": Start development server
 "npm run devStart":  Start development server, automatically restarts whenever code changes occur.
 
+
+## Dotenv file:
+#### Create a ".env" file in this(server/.env) path and put configurations in following format
+    PORT=
+    MONGODB_URI = ""
+    SECRET_KEY=""
 
 ## API Routes
 

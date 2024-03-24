@@ -12,7 +12,7 @@ router.get('/api/timetable/:faculty/:year/:semester', timetableController.getTim
 // get the timetable for specific student
 router.get('/api/timetable/user', authenticate, verifyUser, timetableController.getStudentTimetable);
 
-// get the designed/**************************************************************************** */
+// get the sorted-date, time timetable for specific student
 router.get('/api/timetableF/:faculty/:year/:semester', timetableController.getTimetableForStudent);
 
 // Route for get single timetable entry details

@@ -1,38 +1,38 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const courseSchema = new mongoose.Schema({
   code: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   year: {
     type: Number,
     enum: [1, 2, 3, 4],
-    required: true
+    required: true,
   },
   semester: {
     type: Number,
     enum: [1, 2],
-    required: true
+    required: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   credits: {
     type: Number,
-    required: true
+    required: true,
   },
   faculty: {
     type: String,
-    enum: ['IT', 'Eng'],
-    required: true
-  }
+    enum: ["IT", "Eng"],
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = mongoose.model("Course", courseSchema);

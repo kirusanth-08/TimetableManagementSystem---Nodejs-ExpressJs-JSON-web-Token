@@ -14,12 +14,16 @@ const userSchema = new mongoose.Schema({
   year: {
     type: Number,
     enum: [1, 2, 3, 4],
-    required: () => { return this.role === "student"; },
+    required: () => {
+      return this.role === "student";
+    },
   },
   semester: {
     type: Number,
     enum: [1, 2],
-    required: () => { return this.role === "student"; },
+    required: () => {
+      return this.role === "student";
+    },
   },
   role: {
     type: String,
@@ -29,7 +33,13 @@ const userSchema = new mongoose.Schema({
   faculty: {
     type: String,
     enum: ["IT", "Eng", "Science", "Business"],
-    required: () => { return (this.role === "faculty") || (this.role === "staff") || (this.role === "student"); },
+    required: () => {
+      return (
+        this.role === "faculty" ||
+        this.role === "staff" ||
+        this.role === "student"
+      );
+    },
   },
 });
 
