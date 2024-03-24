@@ -4,8 +4,6 @@ I was accidentally submitting assignment work time to time to the wrong reposito
 Kindly check follwing repository check the timestamps of me commited:
     https://github.com/kirusanth-08/labsheet2-AF.git
 
-Seperate Folders, files created for Models, Controllers, Routes, Middleware, configuration file(.env)
-
 
 ## Running Scripts
 - `npm start`: Start development server
