@@ -1,10 +1,5 @@
 # Timetable management system.
 
-I was accidentally submitting assignment work time to time to the wrong repository, thats why it delayed to push into this repository.
-Kindly check follwing repository check the timestamps of me commited:
-    https://github.com/kirusanth-08/labsheet2-AF.git
-
-
 ## Running Scripts
 - `npm start`: Start development server
 - `npm run devStart`:  Start development server, automatically restarts whenever code changes occur.
